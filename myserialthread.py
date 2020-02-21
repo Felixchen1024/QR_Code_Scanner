@@ -52,7 +52,7 @@ class SerialThread(QtCore.QThread):
         return self._serial.isOpen()
 
     def run(self):
-        # self._status_signal.emit(self._serial.isOpen())  # 发送状态信号
+        self._status_signal.emit(self._serial.isOpen())  # 发送状态信号
         while not self._stop:
             try:
                 # n = self._serial.inWaiting()

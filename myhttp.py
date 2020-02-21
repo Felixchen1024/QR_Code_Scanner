@@ -55,17 +55,18 @@ def VisitEntry(ID, Healthy, Temperature):  # 拜访进入确认(保安测完体�
 
 
 if __name__ == '__main__':
-    res = QueryUserByCode('216555')  # 216555
+    # res = QueryUserByCode('216555')  # 216555
     # print(res['UserId'])
     #
     # for key, value in res.items():
     #     print(key, value)
 
-    # StaffEntry('1000', '是', '37.0')
-
-    res = QueryVisitorByCode('18559517777')  # 19959793115 18559517777
+    res = StaffEntry('71', '是', '')
     print(res)
-    for key, value in res.items():
-        print(key, value)
+
+    # res = QueryVisitorByCode('18559517777')  # 19959793115 18559517777
+    # print(res)
+    # for key, value in res.items():
+    #     print(key, value)
 
     # VisitEntry('100001', '是', '37.0')

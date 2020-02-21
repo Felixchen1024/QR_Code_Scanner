@@ -1,5 +1,7 @@
 <RCC>
   <qresource prefix="/">
+    <file>img/listwidget_staff.png</file>
+    <file>img/listwidget_visitor.png</file>
     <file>img/health_abnormal.png</file>
     <file>img/health_normal.png</file>
     <file>img/is_open_off.png</file>

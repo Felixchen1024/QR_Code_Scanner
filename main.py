@@ -6,7 +6,7 @@ if hasattr(sys, 'frozen'):
 
 import mainwindow
 from PyQt5 import QtGui, QtCore
-from PyQt5.QtWidgets import QApplication, QMainWindow, QMessageBox
+from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QMessageBox
 from PyQt5.QtCore import QTimer
 import myserialthread
 import re
@@ -19,7 +19,8 @@ class MyMainWindow(QMainWindow, mainwindow.Ui_MainWindow):
         super(MyMainWindow, self).__init__(parent)
         self.setupUi(self)
         # 日志
-        self._mylogger = mylogger.MyLogger(out=1).getLogger()
+        self._mylogger = mylogger.MyLogger(out=2).getLogger()
+        self._mylogger.info('启动')
 
         # 设置输入范围
         my_regex = QtCore.QRegExp("^(([3-4][0-9])(\\.\\d{1,2})?)$")  # 30.00 - 49.99
@@ -27,6 +28,9 @@ class MyMainWindow(QMainWindow, mainwindow.Ui_MainWindow):
         self.ui_lne_temperature.setValidator(my_validator)
         self.ui_lne_temperature_max.setValidator(my_validator)
         self.ui_lne_temperature_min.setValidator(my_validator)
+
+        # 文本框自动换行
+        self.ui_lw_visitor_info.setWordWrap(True)
 
         # 信号槽
         self.ui_btn_refresh.clicked.connect(self.refreshEvent)
@@ -40,17 +44,29 @@ class MyMainWindow(QMainWindow, mainwindow.Ui_MainWindow):
         self._serial_thread._status_signal.connect(self.updateConnectStatusEvent)  # 接收连接状态信号
         self._is_open = False  # 连接状态
         self._is_ok = False  # 报警
-        self._flag = 0  # 0员工 1访客
+        self._flag = -1  # -1无 0员工 1访客
         self._visitor_info = dict()  # 当前扫码的人员信息
 
-        # self.ui_btn_refresh.click()  # 刷新，扫描端口
-        self.autoConnect()
+        self.ui_lne_temperature.setFocus()  # 当前体温，获取焦点
 
-        self._mylogger.debug('debug级别，一般用来打印一些调试信息，级别最低')
-        self._mylogger.info('info级别，一般用来打印一些正常的操作信息')
-        self._mylogger.warning('waring级别，一般用来打印警告信息')
-        self._mylogger.error('error级别，一般用来打印一些错误信息')
-        self._mylogger.critical('critical级别，一般用来打印一些致命的错误信息，等级最高')
+        self.autoConnect()  # 串口自动连接
+
+        # self._mylogger.debug('debug级别，一般用来打印一些调试信息，级别最低')
+        # self._mylogger.info('info级别，一般用来打印一些正常的操作信息')
+        # self._mylogger.warning('waring级别，一般用来打印警告信息')
+        # self._mylogger.error('error级别，一般用来打印一些错误信息')
+        # self._mylogger.critical('critical级别，一般用来打印一些致命的错误信息，等级最高')
+
+    def infoBox(self, msg, buttons=QMessageBox.Ok, time=0):
+        box = QMessageBox()
+        box.setIcon(QMessageBox.Information)
+        box.setWindowTitle("提示")
+        box.setText(msg)
+        box.setStandardButtons(buttons)
+        box.setStyleSheet('font: 30pt "Agency FB";')
+        if time != 0:
+            box.button(QMessageBox.Ok).animateClick(time * 1000)  # time秒自动关闭
+        return  box.exec_()
 
     # 打开界面，自动连接
     def autoConnect(self):
@@ -64,6 +80,7 @@ class MyMainWindow(QMainWindow, mainwindow.Ui_MainWindow):
                 if port[1] and 'USB 串行设备' in port[1]:
                     com = port[0]
         if com == '':
+            self._mylogger.warning('没有可用端口')
             return
         try:
             if self._serial_thread.openPort(com):  # 打开串口
@@ -75,7 +92,7 @@ class MyMainWindow(QMainWindow, mainwindow.Ui_MainWindow):
                 self.ui_cb_com.setDisabled(True)
                 self._timer.start(300)
         except Exception as ex:
-            print(ex)
+            self._mylogger.error('异常：' + ex)
             return
 
     # 体温是否正常
@@ -86,7 +103,7 @@ class MyMainWindow(QMainWindow, mainwindow.Ui_MainWindow):
             temp_max = float(self.ui_lne_temperature_max.text())
             temp_min = float(self.ui_lne_temperature_min.text())
         except Exception as ex:
-            print(ex)
+            self._mylogger.error('异常：' + ex)
             return
         return True if (temp >= temp_min) and (temp <= temp_max) else False
 
@@ -96,9 +113,9 @@ class MyMainWindow(QMainWindow, mainwindow.Ui_MainWindow):
         # print(is_ok)
         if is_ok != self._is_ok:
             if is_ok:
-                self.ui_lab_alarm.setStyleSheet("background-color: rgb(0, 255, 0);")
+                self.ui_lab_alarm.setStyleSheet("border-image: url(:/img/health_normal.png);")
             else:
-                self.ui_lab_alarm.setStyleSheet("background-color: rgb(255, 0, 0);")
+                self.ui_lab_alarm.setStyleSheet("border-image: url(:/img/health_abnormal.png);")
         self._is_ok = is_ok
 
     # 刷新按键
@@ -115,7 +132,7 @@ class MyMainWindow(QMainWindow, mainwindow.Ui_MainWindow):
     def openEvent(self):
         port = self.ui_cb_com.currentText()
         if port == '':
-            QMessageBox.information(self, "提示", '没有可用串口')
+            self.infoBox(msg='没有可用串口')
             return
         if self.ui_btn_connect.text() == '打开':  # 打开
             try:
@@ -128,7 +145,8 @@ class MyMainWindow(QMainWindow, mainwindow.Ui_MainWindow):
                     self.ui_cb_com.setDisabled(True)
                     self._timer.start(300)
             except Exception as ex:
-                print(ex)
+                self._mylogger.error('异常：' + ex)
+                self.infoBox(msg='串口打开失败')
                 return
         else:  # 关闭
             try:
@@ -143,7 +161,8 @@ class MyMainWindow(QMainWindow, mainwindow.Ui_MainWindow):
                 self.ui_cb_com.setDisabled(False)
                 self._timer.stop()
             except Exception as ex:
-                print(ex)
+                self._mylogger.error('异常：' + ex)
+                self.infoBox(msg='串口打开失败')
                 return
 
         self.updateConnectStatusEvent(self._serial_thread.portIsOpen())
@@ -152,9 +171,9 @@ class MyMainWindow(QMainWindow, mainwindow.Ui_MainWindow):
     def updateConnectStatusEvent(self, is_open):
         if is_open != self._is_open:
             if is_open:
-                self.ui_lab_status.setStyleSheet("border-image: url(:/img/io_green.png);")
+                self.ui_lab_status.setStyleSheet("border-image: url(:/img/is_open_on.png)")
             else:
-                self.ui_lab_status.setStyleSheet("border-image: url(:/img/io_red.png);")
+                self.ui_lab_status.setStyleSheet("border-image: url(:/img/is_open_off.png)")
         self._is_open = is_open
 
     # 接收二维码，并处理
@@ -166,22 +185,26 @@ class MyMainWindow(QMainWindow, mainwindow.Ui_MainWindow):
         # visitCode（员工：身份证后六位，访客：手机号）
         try:
             flag = re.compile(r'(?<=flag=)[0-1]').search(url).group()  # r'(?<=visitCode=)\d+\.?\d*'
-            print(flag)
+            flag = int(flag)
             visit_code = re.compile(r'(?<=visitCode=)\d{6,}').search(url).group()
-            print(visit_code)
+            # print(flag, visit_code)
         except Exception as ex:
-            print(ex)
-            QMessageBox.information(self, "提示", "无效二维码！")
+            self._mylogger.error('异常：' + ex)
+            self.infoBox(msg='无效二维码')
             return
 
         # 获取人员信息
         self.ui_lw_visitor_info.clear()  # 清除信息
-        if flag == '0':  # 员工
+        self._flag = flag
+        if flag == 0:  # 员工
             self._visitor_info = myhttp.QueryUserByCode(visit_code)
-        elif flag == '1':  # 访客
+            self.ui_lw_visitor_info.setStyleSheet("border-image: url(:/img/listwidget_staff.png);")
+        elif flag == 1:  # 访客
             self._visitor_info = myhttp.QueryVisitorByCode(visit_code)
+            self.ui_lw_visitor_info.setStyleSheet("border-image: url(:/img/listwidget_visitor.png);")
         if len(self._visitor_info) == 0:
-            QMessageBox.information(self, "提示", "查询失败！")
+            self._mylogger.warning('查询失败')
+            self.infoBox(msg='查询失败')
             return  # 错误
 
         # 字段转中文
@@ -213,28 +236,43 @@ class MyMainWindow(QMainWindow, mainwindow.Ui_MainWindow):
 
     # 提交按键
     def okEvent(self):
-        res = QMessageBox.information(self, "提示", "确定提交？", QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
-        msg = ''
+        self.ui_lne_temperature.setFocus()  # 当前体温，获取焦点
+        res = self.infoBox(msg='确认放行？', buttons=QMessageBox.Yes | QMessageBox.No)
+        if res != QMessageBox.Yes:
+            return
 
-        if len(self._visitor_info) == 0:
-            QMessageBox.information(self, "提示", "请先扫描二维码！")
+        if (len(self._visitor_info) == 0) or (self._flag == -1):
+            self.infoBox(msg='请先扫描二维码')
             return
 
         healthy = '是' if self.temperature_is_ok() else '否'
         temperature = self.ui_lne_temperature.text()
 
-        if res == QMessageBox.Yes:
-            if self._flag == 0:
-                user_id = self._visitor_info['UserId']
-                msg = myhttp.StaffEntry(user_id, healthy, temperature)['msg']
-            elif self._flag == 1:
-                id = self._visitor_info['ID']
-                msg = myhttp.VisitEntry(id, healthy, temperature)['msg']
-        QMessageBox.information(self, "提示", msg)
+        ack = dict()  # 应答
+        if self._flag == 0:
+            user_id = self._visitor_info['UserId']
+            ack = myhttp.StaffEntry(user_id, healthy, temperature)
+        elif self._flag == 1:
+            visit_id = self._visitor_info['ID']
+            ack = myhttp.VisitEntry(visit_id, healthy, temperature)
+        else:
+            self._mylogger.warning('查询失败')
+            self.infoBox(msg='查询失败')
+            return
+
+        msg = ack['msg'] if 'msg' in ack.keys() else '错误'
+        self.infoBox(msg=msg, time=2)
+
+        # 清除当前信息
+        self._mylogger.info(f'提交信息： flag={str(self._flag)} visitor={str(self._visitor_info)}')
+        self._flag = -1
+        self._visitor_info.clear()
+        self.ui_lw_visitor_info.clear()
+        self.ui_lw_visitor_info.setStyleSheet("")
 
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     MainWindow = MyMainWindow()
-    MainWindow.show()
+    MainWindow.showMaximized()
     sys.exit(app.exec_())
