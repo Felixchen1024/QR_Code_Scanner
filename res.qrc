@@ -1,5 +1,11 @@
 <RCC>
   <qresource prefix="/">
+    <file>img/health_abnormal.png</file>
+    <file>img/health_normal.png</file>
+    <file>img/is_open_off.png</file>
+    <file>img/is_open_on.png</file>
+    <file>img/lineedit.png</file>
+    <file>img/listwidget.png</file>
     <file>img/io_green.png</file>
     <file>img/io_red.png</file>
   </qresource>
