@@ -92,7 +92,7 @@ class MyMainWindow(QMainWindow, mainwindow.Ui_MainWindow):
                 self.ui_cb_com.setDisabled(True)
                 self._timer.start(300)
         except Exception as ex:
-            self._mylogger.error('异常：' + ex)
+            self._mylogger.error('异常：' + str(ex))
             return
 
     # 体温是否正常
@@ -103,7 +103,7 @@ class MyMainWindow(QMainWindow, mainwindow.Ui_MainWindow):
             temp_max = float(self.ui_lne_temperature_max.text())
             temp_min = float(self.ui_lne_temperature_min.text())
         except Exception as ex:
-            self._mylogger.error('异常：' + ex)
+            self._mylogger.error('异常：' + str(ex))
             return
         return True if (temp >= temp_min) and (temp <= temp_max) else False
 
@@ -145,7 +145,7 @@ class MyMainWindow(QMainWindow, mainwindow.Ui_MainWindow):
                     self.ui_cb_com.setDisabled(True)
                     self._timer.start(300)
             except Exception as ex:
-                self._mylogger.error('异常：' + ex)
+                self._mylogger.error('异常：' + str(ex))
                 self.infoBox(msg='串口打开失败')
                 return
         else:  # 关闭
@@ -161,7 +161,7 @@ class MyMainWindow(QMainWindow, mainwindow.Ui_MainWindow):
                 self.ui_cb_com.setDisabled(False)
                 self._timer.stop()
             except Exception as ex:
-                self._mylogger.error('异常：' + ex)
+                self._mylogger.error('异常：' + str(ex))
                 self.infoBox(msg='串口打开失败')
                 return
 
@@ -189,7 +189,7 @@ class MyMainWindow(QMainWindow, mainwindow.Ui_MainWindow):
             visit_code = re.compile(r'(?<=visitCode=)\d{6,}').search(url).group()
             # print(flag, visit_code)
         except Exception as ex:
-            self._mylogger.error('异常：' + ex)
+            self._mylogger.error('异常：' + str(ex))
             self.infoBox(msg='无效二维码')
             return
 

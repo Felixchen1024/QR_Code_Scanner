@@ -62,15 +62,16 @@ class Ui_MainWindow(object):
         font.setPointSize(30)
         self.ui_btn_connect.setFont(font)
         self.ui_btn_connect.setStyleSheet("QPushButton {\n"
-"border: 3px solid rgb(255, 255, 255);\n"
-"border-radius: 5px;\n"
-"padding: 5px;\n"
-"background: rgb(223, 220, 220);\n"
+"    border: 3px solid rgb(255, 255, 255);\n"
+"    border-radius: 5px;\n"
+"    padding: 5px;\n"
+"    background: rgb(120, 174, 249);\n"
 "}\n"
-"\n"
 "QPushButton:pressed {\n"
-"color: #FFFFFF;\n"
-"background: rgb(120, 174, 249);\n"
+"    border: 3px solid rgb(255, 255, 255);\n"
+"    border-radius: 5px;\n"
+"    padding: 5px;\n"
+"    background: rgb(223, 220, 220);\n"
 "}")
         self.ui_btn_connect.setObjectName("ui_btn_connect")
         self.gridLayout_4.addWidget(self.ui_btn_connect, 0, 2, 1, 1)
@@ -238,15 +239,16 @@ class Ui_MainWindow(object):
         font.setPointSize(50)
         self.ui_btn_OK.setFont(font)
         self.ui_btn_OK.setStyleSheet("QPushButton {\n"
-"border: 3px solid rgb(255, 255, 255);\n"
-"border-radius: 5px;\n"
-"padding: 5px;\n"
-"background: rgb(223, 220, 220);\n"
+"    border: 3px solid rgb(255, 255, 255);\n"
+"    border-radius: 5px;\n"
+"    padding: 5px;\n"
+"    background: rgb(120, 174, 249);\n"
 "}\n"
-"\n"
 "QPushButton:pressed {\n"
-"color: #FFFFFF;\n"
-"background: rgb(120, 174, 249);\n"
+"    border: 3px solid rgb(255, 255, 255);\n"
+"    border-radius: 5px;\n"
+"    padding: 5px;\n"
+"    background: rgb(223, 220, 220);\n"
 "}")
         self.ui_btn_OK.setObjectName("ui_btn_OK")
         self.gridLayout.addWidget(self.ui_btn_OK, 5, 0, 1, 4)

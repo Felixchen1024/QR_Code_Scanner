@@ -89,15 +89,16 @@
               </property>
               <property name="styleSheet">
                <string notr="true">QPushButton {
-border: 3px solid rgb(255, 255, 255);
-border-radius: 5px;
-padding: 5px;
-background: rgb(223, 220, 220);
+	border: 3px solid rgb(255, 255, 255);
+	border-radius: 5px;
+	padding: 5px;
+	background: rgb(120, 174, 249);
 }
-
 QPushButton:pressed {
-color: #FFFFFF;
-background: rgb(120, 174, 249);
+	border: 3px solid rgb(255, 255, 255);
+	border-radius: 5px;
+	padding: 5px;
+	background: rgb(223, 220, 220);
 }</string>
               </property>
               <property name="text">
@@ -391,15 +392,16 @@ border-image: url(:/img/health_abnormal.png);
             </property>
             <property name="styleSheet">
              <string notr="true">QPushButton {
-border: 3px solid rgb(255, 255, 255);
-border-radius: 5px;
-padding: 5px;
-background: rgb(223, 220, 220);
+	border: 3px solid rgb(255, 255, 255);
+	border-radius: 5px;
+	padding: 5px;
+	background: rgb(120, 174, 249);
 }
-
 QPushButton:pressed {
-color: #FFFFFF;
-background: rgb(120, 174, 249);
+	border: 3px solid rgb(255, 255, 255);
+	border-radius: 5px;
+	padding: 5px;
+	background: rgb(223, 220, 220);
 }</string>
             </property>
             <property name="text">
