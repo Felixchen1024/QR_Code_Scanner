@@ -221,14 +221,22 @@ class MyMainWindow(QMainWindow, mainwindow.Ui_MainWindow):
             "ID": "访客ID",
             # "Name": "姓名",
             # "Phone": "手机",
-            "Domicile": "户籍",
-            "FromPlace": "来源地",
-            "VisitTo": "拜访人",
-            "VisitOrigin": "来访事由",
-            "TripRecd": "14天出行信息",
+            # "Sex": "性别",
+            "IDNum": "身份证",
+            "FromCompany": "单位",
+            "VisitOrigin": "备注",
+            "Age": "年龄",
             "EntryTime": "进入时间",
             "Healthy": "健康",
-            "Temperature": "体温"
+            "Temperature": "体温",
+            "RequestTime": "请求时间",
+            "IsCovered": "是否佩戴口罩",
+            "IsTourchHubei": "是否有湖北接触",
+            # "Domicile": "户籍",
+            # "FromPlace": "来源地",
+            "VisitTo": "拜访人",
+            # "TripRecd": "14天出行信息",
+            "EntryDate": "进入日期"
         }
 
         for key, value in self._visitor_info.items():
@@ -237,6 +245,7 @@ class MyMainWindow(QMainWindow, mainwindow.Ui_MainWindow):
     # 提交按键
     def okEvent(self):
         self.ui_lne_temperature.setFocus()  # 当前体温，获取焦点
+        self.ui_lne_temperature.selectAll()  # 全选，方便连续输入
         res = self.infoBox(msg='确认放行？', buttons=QMessageBox.Yes | QMessageBox.No)
         if res != QMessageBox.Yes:
             return
