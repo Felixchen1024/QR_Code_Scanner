@@ -1,0 +1,41 @@
+#centralwidget{
+    background-color: rgb(255, 255, 255);
+}
+
+QPushButton {
+	border: 3px solid rgb(255, 255, 255);
+	border-radius: 5px;
+	padding: 5px;
+	background: rgb(120, 174, 249);
+    font: 20pt "微软雅黑";
+}
+QPushButton:pressed {
+	border: 3px solid rgb(255, 255, 255);
+	border-radius: 5px;
+	padding: 5px;
+	background: rgb(223, 220, 220);
+    font: 20pt "微软雅黑";
+}
+
+QGroupBox
+{
+	border: 3px solid;
+	border-top-color: rgb(167, 201, 247);
+	border-left-color: none;
+	border-right-color: none;
+	border-bottom-color: none;
+    font: 20pt "微软雅黑";
+}
+
+QLineEdit{
+	border: 3px solid rgb(180, 208, 246);
+    font: 20pt "微软雅黑";
+}
+
+#ui_lab_status{
+border-image: url(:/img/is_open_off.png);
+}
+
+#ui_lab_alarm{
+border-image: url(:/img/health_abnormal.png);
+}

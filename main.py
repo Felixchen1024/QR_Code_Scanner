@@ -232,7 +232,7 @@ class MyMainWindow(QMainWindow, mainwindow.Ui_MainWindow):
         }
 
         for key, value in self._visitor_info.items():
-            self.ui_lw_visitor_info.addItem(f'{my_shift[key] if key in my_shift.keys() else key}: {value}')  # 打印信息
+            self.ui_lw_visitor_info.addItem(f'  {my_shift[key] if key in my_shift.keys() else key}: {value}')  # 打印信息
 
     # 提交按键
     def okEvent(self):

@@ -1,0 +1,37 @@
+2020-02-21 11:10:50,313 - main.py[line:23] - INFO: 启动
+2020-02-21 11:34:10,811 - main.py[line:23] - INFO: 启动
+2020-02-21 11:37:53,941 - main.py[line:23] - INFO: 启动
+2020-02-21 11:38:32,756 - main.py[line:242] - INFO: 提交信息： flag=0 visitor={'UserId': 71, 'Name': '陈志锋', 'Phone': '17750526667', 'Sex': '男', 'Company': '泉州华中科技大学智能制造研究院', 'Department': '工业软件研发部', 'VisitCode': '273513', 'Job': '工程师'}
+2020-02-21 11:42:34,230 - main.py[line:23] - INFO: 启动
+2020-02-21 11:47:18,992 - main.py[line:23] - INFO: 启动
+2020-02-21 11:49:05,287 - main.py[line:23] - INFO: 启动
+2020-02-21 11:50:38,106 - main.py[line:23] - INFO: 启动
+2020-02-21 11:53:07,004 - main.py[line:23] - INFO: 启动
+2020-02-21 11:53:41,398 - main.py[line:251] - INFO: 提交信息： flag=0 visitor={'UserId': 71, 'Name': '陈志锋', 'Phone': '17750526667', 'Sex': '男', 'Company': '泉州华中科技大学智能制造研究院', 'Department': '工业软件研发部', 'VisitCode': '273513', 'Job': '工程师'}
+2020-02-21 14:11:21,615 - main.py[line:23] - INFO: 启动
+2020-02-21 14:16:53,998 - main.py[line:23] - INFO: 启动
+2020-02-21 14:23:22,458 - main.py[line:23] - INFO: 启动
+2020-02-21 14:27:51,021 - main.py[line:23] - INFO: 启动
+2020-02-21 14:31:25,041 - main.py[line:23] - INFO: 启动
+2020-02-21 14:32:21,282 - main.py[line:23] - INFO: 启动
+2020-02-21 14:38:24,486 - main.py[line:23] - INFO: 启动
+2020-02-21 14:38:41,835 - main.py[line:270] - INFO: 提交信息： flag=0 visitor={'UserId': 71, 'Name': '陈志锋', 'Phone': '17750526667', 'Sex': '男', 'Company': '泉州华中科技大学智能制造研究院', 'Department': '工业软件研发部', 'VisitCode': '273513', 'Job': '工程师'}
+2020-02-21 14:41:47,445 - main.py[line:23] - INFO: 启动
+2020-02-21 14:42:20,469 - main.py[line:23] - INFO: 启动
+2020-02-21 14:45:32,025 - main.py[line:23] - INFO: 启动
+2020-02-21 14:45:39,725 - main.py[line:264] - INFO: 提交信息： flag=0 visitor={'UserId': 71, 'Name': '陈志锋', 'Phone': '17750526667', 'Sex': '男', 'Company': '泉州华中科技大学智能制造研究院', 'Department': '工业软件研发部', 'VisitCode': '273513', 'Job': '工程师'}
+2020-02-21 14:49:06,544 - main.py[line:23] - INFO: 启动
+2020-02-21 14:49:23,396 - main.py[line:23] - INFO: 启动
+2020-02-21 14:49:45,741 - main.py[line:23] - INFO: 启动
+2020-02-21 14:52:57,158 - main.py[line:23] - INFO: 启动
+2020-02-21 14:53:53,711 - main.py[line:23] - INFO: 启动
+2020-02-21 14:58:10,842 - main.py[line:23] - INFO: 启动
+2020-02-21 14:58:40,379 - main.py[line:266] - INFO: 提交信息： flag=0 visitor={'UserId': 71, 'Name': '陈志锋', 'Phone': '17750526667', 'Sex': '男', 'Company': '泉州华中科技大学智能制造研究院', 'Department': '工业软件研发部', 'VisitCode': '273513', 'Job': '工程师'}
+2020-02-21 15:00:11,509 - main.py[line:266] - INFO: 提交信息： flag=0 visitor={'UserId': 71, 'Name': '陈志锋', 'Phone': '17750526667', 'Sex': '男', 'Company': '泉州华中科技大学智能制造研究院', 'Department': '工业软件研发部', 'VisitCode': '273513', 'Job': '工程师'}
+2020-02-21 15:00:59,359 - main.py[line:23] - INFO: 启动
+2020-02-21 15:04:43,102 - main.py[line:23] - INFO: 启动
+2020-02-21 15:06:04,994 - main.py[line:23] - INFO: 启动
+2020-02-21 15:06:14,069 - main.py[line:148] - ERROR: 异常：could not open port 'COM3': FileNotFoundError(2, '系统找不到指定的文件。', None, 2)
+2020-02-21 15:07:10,210 - main.py[line:23] - INFO: 启动
+2020-02-21 15:08:14,180 - main.py[line:148] - ERROR: 异常：could not open port 'COM3': FileNotFoundError(2, '系统找不到指定的文件。', None, 2)
+2020-02-22 11:14:35,351 - main.py[line:23] - INFO: 启动

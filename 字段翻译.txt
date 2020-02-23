@@ -1,0 +1,23 @@
+员工
+"UserId": "用户ID",
+"Name": "姓名",
+"Phone": "手机",
+"Sex": "性别"，
+"Company": "公司",
+"Department": "部门",
+"VisitCode": "身份证",
+"Job": "职位"
+
+访客
+"ID": "访客ID",
+"Phone": "19959793115",
+"Name": "姓名",
+"Domicile": "居住地",
+"FromPlace": "出发地",
+"VisitTo": "拜访人",
+"VisitOrigin":"12341234",
+"TripRecd":"1234134",
+"EntryTime": "进入时间",
+"Healthy": "健康",
+"Temperature": "体温"
+

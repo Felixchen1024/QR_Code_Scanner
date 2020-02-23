@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>体温录入</string>
+   <string>体温登记</string>
   </property>
   <property name="styleSheet">
    <string notr="true"/>

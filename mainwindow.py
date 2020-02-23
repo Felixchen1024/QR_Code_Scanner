@@ -268,7 +268,7 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "体温录入"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "体温登记"))
         self.groupBox_3.setTitle(_translate("MainWindow", "连接扫描枪"))
         self.ui_btn_connect.setText(_translate("MainWindow", "打开"))
         self.ui_btn_refresh.setText(_translate("MainWindow", "刷新"))
