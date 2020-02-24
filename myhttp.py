@@ -27,6 +27,19 @@ def StaffEntry(UserId, Healthy, Temperature):  # 员工进入确认
         print(ex)
         return dict()
 
+
+def StaffTemperatureUpdate(UserId, Temperature):
+    try:
+        postdata = {'UserId': UserId, 'Temperature': Temperature}
+        res = requests.post("http://119.3.66.94:6002/VisitCtl/User/StaffTemperatureUpdate", data=postdata)
+        ack = res.json()
+        print(type(ack), ack)
+        return ack
+    except Exception as ex:
+        print(ex)
+        return dict()
+
+
 def QueryVisitorByCode(visit_code):  # 按手机号获取访客信息
     try:
         postdata = {'VisitCode': visit_code}  # 手机
@@ -54,6 +67,18 @@ def VisitEntry(ID, Healthy, Temperature):  # 拜访进入确认(保安测完体�
         return dict()
 
 
+def VisitTemperatureUpdate(ID, Temperature):
+    try:
+        postdata = {'ID': ID, 'Temperature': Temperature}
+        res = requests.post("http://119.3.66.94:6002/VisitCtl/User/VisitTemperatureUpdate", data=postdata)
+        ack = res.json()
+        print(type(ack), ack)
+        return ack
+    except Exception as ex:
+        print(ex)
+        return dict()
+
+
 if __name__ == '__main__':
     # res = QueryUserByCode('216555')  # 216555
     # print(res['UserId'])
@@ -61,8 +86,11 @@ if __name__ == '__main__':
     # for key, value in res.items():
     #     print(key, value)
 
-    res = StaffEntry('71', '是', '')
-    print(res)
+    # res = StaffEntry('71', '是', '')
+    # print(res)
+
+    # res = StaffTemperatureUpdate(71, '37.2')
+    # print(res)
 
     # res = QueryVisitorByCode('18559517777')  # 19959793115 18559517777
     # print(res)
@@ -70,3 +98,9 @@ if __name__ == '__main__':
     #     print(key, value)
 
     # VisitEntry('100001', '是', '37.0')
+
+    res = VisitTemperatureUpdate(100024, '37.2')
+    print(res)
+
+
+
