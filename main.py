@@ -201,6 +201,10 @@ class MyMainWindow(QMainWindow, mainwindow.Ui_MainWindow):
 
     # 接收二维码，并处理
     def receiveQrCodeEvent(self, url):
+        # 清除信息
+        self.ui_lw_visitor_info.clear()
+        self.ui_lw_visitor_info.setStyleSheet("border-image: none;")
+
         # https://www.baidu.com?flag=0&visitCode=216555
         # url = 'https://www.baidu.com?flag=1&visitCode=17750526667'
         #        47.96.172.122:8066/view/InfoExhibition.html?flag=0&visitCode=273
@@ -214,14 +218,12 @@ class MyMainWindow(QMainWindow, mainwindow.Ui_MainWindow):
         except Exception as ex:
             self._mylogger.error('异常：' + str(ex))
             self._mylogger.warning('无效二维码，验证失败')
-            thread_validation_failed = threading.Thread(mymp3.PlayMp3ValidationFailed)
+            thread_validation_failed = threading.Thread(target=mymp3.PlayMp3ValidationFailed)
             thread_validation_failed.start()  # 播放验证失败
-            self.infoBox(msg='无效二维码，验证失败', time=3)
+            # self.infoBox(msg='无效二维码，验证失败', time=3)
             return  # 错误
 
         # 获取人员信息
-        self.ui_lw_visitor_info.clear()  # 清除信息
-        self.ui_lw_visitor_info.setStyleSheet("border-image: none;")
         self._flag = flag
         if flag == 0:  # 员工
             self._visitor_info = myhttp.QueryUserByCode(visit_code)
