@@ -99,7 +99,7 @@ if __name__ == '__main__':
 
     # VisitEntry('100001', '是', '37.0')
 
-    res = VisitTemperatureUpdate(100024, '37.2')
+    res = VisitTemperatureUpdate(100024, '-')
     print(res)
 
 

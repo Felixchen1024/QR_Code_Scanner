@@ -234,17 +234,31 @@ class MyMainWindow(QMainWindow, mainwindow.Ui_MainWindow):
             self.ui_lw_visitor_info.setStyleSheet("border-image: url(:/img/listwidget_staff.png);")
             thread_staff = threading.Thread(target=mymp3.PlayMp3Staff)
             thread_staff.start()  # 播放内部员工
+            # 提交记录
+            user_id = self._visitor_info['UserId']
+            ack = myhttp.StaffEntry(user_id, '-', '0')  # 应答
+            self._mylogger.info(f'提交信息1：{user_id} {ack}')
         elif flag == 1:  # 访客
             self._visitor_info = myhttp.QueryVisitorByCode(visit_code)
-            if len(self.ui_lw_visitor_info) == 0:
+            if len(self._visitor_info) == 0:
                 self._mylogger.warning('查询失败')
                 thread_query_failed = threading.Thread(target=mymp3.PlayMp3QueryFailed)
                 thread_query_failed.start()  # 播放查询失败
                 self.infoBox(msg='查询失败', time=3)
                 return  # 错误
             self.ui_lw_visitor_info.setStyleSheet("border-image: url(:/img/listwidget_visitor.png);")
-            thread_visitor = threading.Thread(mymp3.PlayMp3Visvitor)
+            thread_visitor = threading.Thread(target=mymp3.PlayMp3Visitor)
             thread_visitor.start()  # 播放拜访人员
+            # 提交记录
+            visit_id = self._visitor_info['ID']
+            ack = myhttp.VisitEntry(visit_id, '-', '0')  # 应答
+            self._mylogger.info(f'提交信息1：{visit_id} {ack}')
+        else:  # 错误
+            self._mylogger.warning('查询失败')
+            thread_query_failed = threading.Thread(target=mymp3.PlayMp3QueryFailed)
+            thread_query_failed.start()  # 播放查询失败
+            self.infoBox(msg='查询失败', time=3)
+            return  # 错误
 
         # 字段转中文
         my_shift = {
@@ -298,10 +312,10 @@ class MyMainWindow(QMainWindow, mainwindow.Ui_MainWindow):
 
         if self._flag == 0:
             user_id = self._visitor_info['UserId']
-            ack = myhttp.StaffEntry(user_id, healthy, temperature)  # 应答
+            ack = myhttp.StaffTemperatureUpdate(user_id, temperature)  # 应答
         elif self._flag == 1:
             visit_id = self._visitor_info['ID']
-            ack = myhttp.VisitEntry(visit_id, healthy, temperature)  # 应答
+            ack = myhttp.VisitTemperatureUpdate(visit_id, temperature)  # 应答
         else:
             self._mylogger.warning('查询失败')
             thread_query_failed = threading.Thread(target=mymp3.PlayMp3QueryFailed)
@@ -311,8 +325,10 @@ class MyMainWindow(QMainWindow, mainwindow.Ui_MainWindow):
 
         if 'msg' in ack.keys():
             msg = ack['msg']
+            # 日志记录
+            self._visitor_info['Temperature'] = temperature
+            self._mylogger.info(f'提交信息2： flag={str(self._flag)} visitor={str(self._visitor_info)}')
             # 清除当前信息
-            self._mylogger.info(f'提交信息： flag={str(self._flag)} visitor={str(self._visitor_info)}')
             self._flag = -1
             self._visitor_info.clear()
             self.ui_lw_visitor_info.clear()
