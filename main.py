@@ -12,6 +12,9 @@ import myserialthread
 import re
 import myhttp
 import mylogger
+import json
+import mymp3
+import threading
 
 
 class MyMainWindow(QMainWindow, mainwindow.Ui_MainWindow):
@@ -28,6 +31,26 @@ class MyMainWindow(QMainWindow, mainwindow.Ui_MainWindow):
         self.ui_lne_temperature.setValidator(my_validator)
         self.ui_lne_temperature_max.setValidator(my_validator)
         self.ui_lne_temperature_min.setValidator(my_validator)
+        # 设置默认值
+        # 写JSON文件
+        # param_dict = {"temperature_min": "36.0", "temperature_max": "37.2"}
+        # with open("./config.json", "w") as f:
+        #     json.dump(param_dict, f)
+        # print("写入文件完成...")
+        # 读JSON文件
+
+        param_dict = dict()
+        try:
+            with open("./config.json", "r") as f:
+                param_dict = json.load(f)
+            print("读取文件完成...")
+        except Exception as ex:
+            self._mylogger.error('异常：' + str(ex))
+            self.infoBox(msg='缺少配置文件')
+            exit()
+
+        self.ui_lne_temperature_max.setText(param_dict['temperature_max'])
+        self.ui_lne_temperature_min.setText(param_dict['temperature_min'])
 
         # 文本框自动换行
         self.ui_lw_visitor_info.setWordWrap(True)
@@ -190,22 +213,38 @@ class MyMainWindow(QMainWindow, mainwindow.Ui_MainWindow):
             # print(flag, visit_code)
         except Exception as ex:
             self._mylogger.error('异常：' + str(ex))
-            self.infoBox(msg='无效二维码')
-            return
+            self._mylogger.warning('无效二维码，验证失败')
+            thread_validation_failed = threading.Thread(mymp3.PlayMp3ValidationFailed)
+            thread_validation_failed.start()  # 播放验证失败
+            self.infoBox(msg='无效二维码，验证失败', time=3)
+            return  # 错误
 
         # 获取人员信息
         self.ui_lw_visitor_info.clear()  # 清除信息
+        self.ui_lw_visitor_info.setStyleSheet("border-image: none;")
         self._flag = flag
         if flag == 0:  # 员工
             self._visitor_info = myhttp.QueryUserByCode(visit_code)
+            if len(self._visitor_info) == 0:
+                self._mylogger.warning('查询失败')
+                thread_query_failed = threading.Thread(target=mymp3.PlayMp3QueryFailed)
+                thread_query_failed.start()  # 播放查询失败
+                self.infoBox(msg='查询失败', time=3)
+                return  # 错误
             self.ui_lw_visitor_info.setStyleSheet("border-image: url(:/img/listwidget_staff.png);")
+            thread_staff = threading.Thread(target=mymp3.PlayMp3Staff)
+            thread_staff.start()  # 播放内部员工
         elif flag == 1:  # 访客
             self._visitor_info = myhttp.QueryVisitorByCode(visit_code)
+            if len(self.ui_lw_visitor_info) == 0:
+                self._mylogger.warning('查询失败')
+                thread_query_failed = threading.Thread(target=mymp3.PlayMp3QueryFailed)
+                thread_query_failed.start()  # 播放查询失败
+                self.infoBox(msg='查询失败', time=3)
+                return  # 错误
             self.ui_lw_visitor_info.setStyleSheet("border-image: url(:/img/listwidget_visitor.png);")
-        if len(self._visitor_info) == 0:
-            self._mylogger.warning('查询失败')
-            self.infoBox(msg='查询失败')
-            return  # 错误
+            thread_visitor = threading.Thread(mymp3.PlayMp3Visvitor)
+            thread_visitor.start()  # 播放拜访人员
 
         # 字段转中文
         my_shift = {
@@ -257,27 +296,30 @@ class MyMainWindow(QMainWindow, mainwindow.Ui_MainWindow):
         healthy = '是' if self.temperature_is_ok() else '否'
         temperature = self.ui_lne_temperature.text()
 
-        ack = dict()  # 应答
         if self._flag == 0:
             user_id = self._visitor_info['UserId']
-            ack = myhttp.StaffEntry(user_id, healthy, temperature)
+            ack = myhttp.StaffEntry(user_id, healthy, temperature)  # 应答
         elif self._flag == 1:
             visit_id = self._visitor_info['ID']
-            ack = myhttp.VisitEntry(visit_id, healthy, temperature)
+            ack = myhttp.VisitEntry(visit_id, healthy, temperature)  # 应答
         else:
             self._mylogger.warning('查询失败')
-            self.infoBox(msg='查询失败')
-            return
+            thread_query_failed = threading.Thread(target=mymp3.PlayMp3QueryFailed)
+            thread_query_failed.start()  # 播放查询失败
+            self.infoBox(msg='查询失败', time=3)
+            return  # 错误
 
-        msg = ack['msg'] if 'msg' in ack.keys() else '错误'
+        if 'msg' in ack.keys():
+            msg = ack['msg']
+            # 清除当前信息
+            self._mylogger.info(f'提交信息： flag={str(self._flag)} visitor={str(self._visitor_info)}')
+            self._flag = -1
+            self._visitor_info.clear()
+            self.ui_lw_visitor_info.clear()
+            self.ui_lw_visitor_info.setStyleSheet("")
+        else:
+            msg = '提交失败'
         self.infoBox(msg=msg, time=2)
-
-        # 清除当前信息
-        self._mylogger.info(f'提交信息： flag={str(self._flag)} visitor={str(self._visitor_info)}')
-        self._flag = -1
-        self._visitor_info.clear()
-        self.ui_lw_visitor_info.clear()
-        self.ui_lw_visitor_info.setStyleSheet("")
 
 
 if __name__ == '__main__':

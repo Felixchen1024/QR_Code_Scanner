@@ -276,7 +276,7 @@ class Ui_MainWindow(object):
         self.groupBox_4.setTitle(_translate("MainWindow", "人员信息"))
         self.groupBox.setTitle(_translate("MainWindow", "健康状况"))
         self.ui_lne_temperature_min.setText(_translate("MainWindow", "36.0"))
-        self.ui_lne_temperature_max.setText(_translate("MainWindow", "37.3"))
+        self.ui_lne_temperature_max.setText(_translate("MainWindow", "37.2"))
         self.label_2.setText(_translate("MainWindow", "正常范围"))
         self.label.setText(_translate("MainWindow", "当前体温"))
         self.ui_btn_OK.setText(_translate("MainWindow", "放行"))

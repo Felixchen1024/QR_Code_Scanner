@@ -298,7 +298,7 @@ QLineEdit{
              </font>
             </property>
             <property name="text">
-             <string>37.3</string>
+             <string>37.2</string>
             </property>
             <property name="alignment">
              <set>Qt::AlignCenter</set>
