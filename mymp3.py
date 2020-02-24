@@ -17,7 +17,7 @@ def PlayMp3Staff():  # 内部员工
 
 
 def PlayMp3Visvitor():  # 拜访人员
-    playsound(r'./mp3/Visvitor.mp3')
+    playsound(r'./mp3/Visitor.mp3')
 
 
 def PlayMp3ValidationFailed():  # 验证失败
@@ -31,4 +31,5 @@ def PlayMp3QueryFailed():  # 查询失败
 if __name__ == '__main__':
     PlayMp3Staff()
     PlayMp3Visvitor()
-    PlayMp3Failed()
+    PlayMp3ValidationFailed()
+    PlayMp3QueryFailed()
