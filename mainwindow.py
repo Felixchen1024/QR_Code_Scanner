@@ -61,6 +61,7 @@ class Ui_MainWindow(object):
         font = QtGui.QFont()
         font.setPointSize(30)
         self.ui_btn_connect.setFont(font)
+        self.ui_btn_connect.setFocusPolicy(QtCore.Qt.NoFocus)
         self.ui_btn_connect.setStyleSheet("QPushButton {\n"
 "    border: 3px solid rgb(255, 255, 255);\n"
 "    border-radius: 5px;\n"
@@ -84,6 +85,7 @@ class Ui_MainWindow(object):
         font = QtGui.QFont()
         font.setPointSize(30)
         self.ui_cb_com.setFont(font)
+        self.ui_cb_com.setFocusPolicy(QtCore.Qt.NoFocus)
         self.ui_cb_com.setObjectName("ui_cb_com")
         self.gridLayout_4.addWidget(self.ui_cb_com, 0, 0, 1, 1)
         self.ui_btn_refresh = QtWidgets.QPushButton(self.groupBox_3)
@@ -95,6 +97,7 @@ class Ui_MainWindow(object):
         font = QtGui.QFont()
         font.setPointSize(30)
         self.ui_btn_refresh.setFont(font)
+        self.ui_btn_refresh.setFocusPolicy(QtCore.Qt.NoFocus)
         self.ui_btn_refresh.setStyleSheet("QPushButton {\n"
 "    border: 3px solid rgb(255, 255, 255);\n"
 "    border-radius: 5px;\n"
@@ -143,6 +146,7 @@ class Ui_MainWindow(object):
         font = QtGui.QFont()
         font.setPointSize(30)
         self.ui_lw_visitor_info.setFont(font)
+        self.ui_lw_visitor_info.setFocusPolicy(QtCore.Qt.NoFocus)
         self.ui_lw_visitor_info.setStyleSheet("")
         self.ui_lw_visitor_info.setObjectName("ui_lw_visitor_info")
         self.gridLayout_5.addWidget(self.ui_lw_visitor_info, 0, 0, 1, 1)
@@ -243,6 +247,7 @@ class Ui_MainWindow(object):
         font = QtGui.QFont()
         font.setPointSize(50)
         self.ui_btn_OK.setFont(font)
+        self.ui_btn_OK.setFocusPolicy(QtCore.Qt.NoFocus)
         self.ui_btn_OK.setStyleSheet("QPushButton {\n"
 "    border: 3px solid rgb(255, 255, 255);\n"
 "    border-radius: 5px;\n"

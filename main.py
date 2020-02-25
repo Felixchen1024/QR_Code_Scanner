@@ -15,6 +15,7 @@ import mylogger
 import json
 import mymp3
 import threading
+import datetime
 
 
 class MyMainWindow(QMainWindow, mainwindow.Ui_MainWindow):
@@ -38,19 +39,18 @@ class MyMainWindow(QMainWindow, mainwindow.Ui_MainWindow):
         #     json.dump(param_dict, f)
         # print("写入文件完成...")
         # 读JSON文件
-
-        param_dict = dict()
+        self._param_dict = dict()
         try:
             with open("./config.json", "r") as f:
-                param_dict = json.load(f)
-            print("读取文件完成...")
+                self._param_dict = json.load(f)
+            self._mylogger.info("读取文件完成...")
         except Exception as ex:
             self._mylogger.error('异常：' + str(ex))
             self.infoBox(msg='缺少配置文件')
             exit()
-
-        self.ui_lne_temperature_max.setText(param_dict['temperature_max'])
-        self.ui_lne_temperature_min.setText(param_dict['temperature_min'])
+        # 设置默认值
+        self.ui_lne_temperature_max.setText(self._param_dict['temperature_max'])
+        self.ui_lne_temperature_min.setText(self._param_dict['temperature_min'])
 
         # 文本框自动换行
         self.ui_lw_visitor_info.setWordWrap(True)
@@ -60,7 +60,7 @@ class MyMainWindow(QMainWindow, mainwindow.Ui_MainWindow):
         self.ui_btn_connect.clicked.connect(self.openEvent)
         self.ui_btn_OK.clicked.connect(self.okEvent)
         self._timer = QTimer(self)
-        self._timer.timeout.connect(self.updateAlarmEvent)
+        self._timer.timeout.connect(self.updateTimerEvent)
 
         self._serial_thread = myserialthread.SerialThread()  # 串口线程
         self._serial_thread._id_signal.connect(self.receiveQrCodeEvent)  # 接收ID信号
@@ -69,16 +69,15 @@ class MyMainWindow(QMainWindow, mainwindow.Ui_MainWindow):
         self._is_ok = False  # 报警
         self._flag = -1  # -1无 0员工 1访客
         self._visitor_info = dict()  # 当前扫码的人员信息
+        self._scan_time = datetime.datetime.now()  # 记录最后扫码时间，间隔时间超过30秒，自动清除
 
         self.ui_lne_temperature.setFocus()  # 当前体温，获取焦点
 
         self.autoConnect()  # 串口自动连接
 
-        # self._mylogger.debug('debug级别，一般用来打印一些调试信息，级别最低')
-        # self._mylogger.info('info级别，一般用来打印一些正常的操作信息')
-        # self._mylogger.warning('waring级别，一般用来打印警告信息')
-        # self._mylogger.error('error级别，一般用来打印一些错误信息')
-        # self._mylogger.critical('critical级别，一般用来打印一些致命的错误信息，等级最高')
+        # 测试
+        # self.getInfoFromServer(0, '28547X')  # 身份证后6位带英文
+        # self._timer.start(300)
 
     def infoBox(self, msg, buttons=QMessageBox.Ok, time=0):
         box = QMessageBox()
@@ -130,8 +129,9 @@ class MyMainWindow(QMainWindow, mainwindow.Ui_MainWindow):
             return
         return True if (temp >= temp_min) and (temp <= temp_max) else False
 
-    # 刷新报警
-    def updateAlarmEvent(self):
+    # 刷新报警，定时间隔清除人员信息
+    def updateTimerEvent(self):
+        # 刷新报警
         is_ok = self.temperature_is_ok()
         # print(is_ok)
         if is_ok != self._is_ok:
@@ -140,6 +140,15 @@ class MyMainWindow(QMainWindow, mainwindow.Ui_MainWindow):
             else:
                 self.ui_lab_alarm.setStyleSheet("border-image: url(:/img/health_abnormal.png);")
         self._is_ok = is_ok
+
+        # 定时间隔清除人员信息
+        if self._flag != -1:
+            now = datetime.datetime.now()
+            diff = (now - self._scan_time).seconds
+            print(diff)
+            if diff > int(self._param_dict['clear_interval']):
+                self.clearInfo()
+
 
     # 刷新按键
     def refreshEvent(self):
@@ -202,8 +211,7 @@ class MyMainWindow(QMainWindow, mainwindow.Ui_MainWindow):
     # 接收二维码，并处理
     def receiveQrCodeEvent(self, url):
         # 清除信息
-        self.ui_lw_visitor_info.clear()
-        self.ui_lw_visitor_info.setStyleSheet("border-image: none;")
+        self.clearInfo()
 
         # https://www.baidu.com?flag=0&visitCode=216555
         # url = 'https://www.baidu.com?flag=1&visitCode=17750526667'
@@ -213,7 +221,7 @@ class MyMainWindow(QMainWindow, mainwindow.Ui_MainWindow):
         try:
             flag = re.compile(r'(?<=flag=)[0-1]').search(url).group()  # r'(?<=visitCode=)\d+\.?\d*'
             flag = int(flag)
-            visit_code = re.compile(r'(?<=visitCode=)\d{6,}').search(url).group()
+            visit_code = re.compile(r'(?<=visitCode=)[0-9a-zA-z]{6,}').search(url).group()
             # print(flag, visit_code)
         except Exception as ex:
             self._mylogger.error('异常：' + str(ex))
@@ -222,8 +230,11 @@ class MyMainWindow(QMainWindow, mainwindow.Ui_MainWindow):
             thread_validation_failed.start()  # 播放验证失败
             # self.infoBox(msg='无效二维码，验证失败', time=3)
             return  # 错误
+        self.getInfoFromServer(flag, visit_code)  # 获取人员信息并显示
+        self._scan_time = datetime.datetime.now()  # 记录最后扫码时间，间隔时间超过30秒，自动清除
 
-        # 获取人员信息
+    # 获取人员信息并显示
+    def getInfoFromServer(self, flag, visit_code):
         self._flag = flag
         if flag == 0:  # 员工
             self._visitor_info = myhttp.QueryUserByCode(visit_code)
@@ -295,6 +306,9 @@ class MyMainWindow(QMainWindow, mainwindow.Ui_MainWindow):
         }
 
         for key, value in self._visitor_info.items():
+            # 手机中间4位显示'*'
+            if key == 'Phone':
+                value = value[:3] + '****' + value[7:]
             self.ui_lw_visitor_info.addItem(f'  {my_shift[key] if key in my_shift.keys() else key}: {value}')  # 打印信息
 
     # 提交按键
@@ -331,14 +345,18 @@ class MyMainWindow(QMainWindow, mainwindow.Ui_MainWindow):
             self._visitor_info['Temperature'] = temperature
             self._mylogger.info(f'提交信息2： flag={str(self._flag)} visitor={str(self._visitor_info)}')
             # 清除当前信息
-            self._flag = -1
-            self._visitor_info.clear()
-            self.ui_lw_visitor_info.clear()
-            self.ui_lw_visitor_info.setStyleSheet("")
+            self.clearInfo()
+            self.ui_lw_visitor_info.setStyleSheet("")  # 清除当前体温
         else:
             msg = '提交失败'
         self.infoBox(msg=msg, time=2)
 
+    # 清除人员信息
+    def clearInfo(self):
+        self._flag = -1
+        self._visitor_info.clear()
+        self.ui_lw_visitor_info.clear()
+        self.ui_lw_visitor_info.setStyleSheet("border-image: none;")
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

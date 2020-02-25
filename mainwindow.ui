@@ -87,6 +87,9 @@
                 <pointsize>30</pointsize>
                </font>
               </property>
+              <property name="focusPolicy">
+               <enum>Qt::NoFocus</enum>
+              </property>
               <property name="styleSheet">
                <string notr="true">QPushButton {
 	border: 3px solid rgb(255, 255, 255);
@@ -119,6 +122,9 @@ QPushButton:pressed {
                 <pointsize>30</pointsize>
                </font>
               </property>
+              <property name="focusPolicy">
+               <enum>Qt::NoFocus</enum>
+              </property>
              </widget>
             </item>
             <item row="0" column="1">
@@ -133,6 +139,9 @@ QPushButton:pressed {
                <font>
                 <pointsize>30</pointsize>
                </font>
+              </property>
+              <property name="focusPolicy">
+               <enum>Qt::NoFocus</enum>
               </property>
               <property name="styleSheet">
                <string notr="true">QPushButton {
@@ -210,6 +219,9 @@ border-image: url(:/img/is_open_off.png);
                <font>
                 <pointsize>30</pointsize>
                </font>
+              </property>
+              <property name="focusPolicy">
+               <enum>Qt::NoFocus</enum>
               </property>
               <property name="styleSheet">
                <string notr="true"/>
@@ -401,6 +413,9 @@ border-image: url(:/img/health_abnormal.png);
              <font>
               <pointsize>50</pointsize>
              </font>
+            </property>
+            <property name="focusPolicy">
+             <enum>Qt::NoFocus</enum>
             </property>
             <property name="styleSheet">
              <string notr="true">QPushButton {
